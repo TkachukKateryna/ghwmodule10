@@ -58,7 +58,7 @@ class Record:
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
 class AddressBook(UserDict):
-    # реалізація класу
+    
     def add_record(self, record: Record):
         self.data[record.name.value] = record
 
