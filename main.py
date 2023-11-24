@@ -8,7 +8,6 @@ class Field:
         return str(self.value)
 
 class Name(Field):
-    # реалізація класу
     pass
 
 class Phone(Field):
@@ -19,9 +18,6 @@ class Phone(Field):
     
     def validate(self, value):
         return isinstance(value, str) and len(value) == 10 and value.isdigit()
-
-    # реалізація класу
-    
 
 class Record:
     def __init__(self, name):
@@ -57,8 +53,6 @@ class Record:
         for phone in self.phones:
             if phone.value == phone_number:
                 self.phones.remove(phone)
-
-    # реалізація класу
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
