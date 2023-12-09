@@ -1,5 +1,7 @@
 from collections import UserDict
 from datetime import date, datetime
+import pickle
+import cmd
 
 class Field:
     def __init__(self, value):
@@ -97,6 +99,7 @@ class Record:
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday}"
 
 class AddressBook(UserDict):
+    file = None
     
     def add_record(self, record: Record):
         self.data[record.name.value] = record
@@ -121,3 +124,36 @@ class AddressBook(UserDict):
                 yield result
                 counter = 0
                 result = ''
+
+    def find_match(self):
+        start = input("Вкажіть, яке співпадіння Ви бажаєте знайти: ")
+        result = " "
+        print(result)
+        for name, record in self.data.items():
+            if start.isalpha() == True:
+                if name.lower().find(start.lower())!= -1:
+                    result += f"Contact name: {record.name.value}, phones: {'; '.join(p.value for p in record.phones)}, birthday: {record.birthday}\n"
+            elif start.isdigit()== True:
+                for phone in record.phones:
+                    if phone.value.find(start)!= -1:
+                        result += f"Contact name: {record.name.value}, phones: {'; '.join(p.value for p in record.phones)}, birthday: {record.birthday}\n"
+            else:
+                print("Співпадінь не знайдено")
+        return result
+
+
+    def dump(self):
+        with open(self.file, 'wb') as file:
+            pickle.dump(self.data, file) 
+            
+    
+    def load(self):
+        if not self.file.exists():
+            return
+        with open(self.file, 'rb') as file:
+            self.data = pickle.load(file)
+
+class Controller(cmd.Cmd):
+    def exit(self):
+        self.book.dump()
+        return True
